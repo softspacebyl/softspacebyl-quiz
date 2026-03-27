@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stop Second-Guessing Your Space — softspacebyl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F3EE;
+    --warm-white: #FDFAF7;
+    --terracotta: #C4714A;
+    --terracotta-light: #E8977A;
+    --sage: #7A9E87;
+    --charcoal: #2C2C2C;
+    --warm-gray: #9A8F85;
+    --border: #E2D9D0;
+    --result-warm: #C4714A;
+    --result-calm: #7A9E87;
+    --result-playful: #C4845A;
+    --result-soft: #8FAE8A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── DECORATIVE BG ── */
+  .bg-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-blob-1 { width: 500px; height: 500px; background: var(--terracotta); top: -150px; right: -100px; }
+  .bg-blob-2 { width: 400px; height: 400px; background: var(--sage); bottom: -100px; left: -80px; }
+
+  /* ── WRAPPER ── */
+  .quiz-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .brand {
+    text-align: center;
+    padding: 32px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    font-weight: 500;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeUp 0.5s ease forwards; }
+  .screen.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── INTRO ── */
+  .intro-eyebrow {
+    display: inline-block;
+    margin-top: 48px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+  }
+
+  .intro-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 52px);
+    line-height: 1.12;
+    color: var(--charcoal);
+    margin-top: 14px;
+  }
+
+  .intro-headline em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .intro-sub {
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--warm-gray);
+    max-width: 480px;
+  }
+
+  .intro-promise {
+    margin-top: 32px;
+    padding: 20px 24px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .intro-promise-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .intro-promise-text { font-size: 14px; line-height: 1.6; color: var(--charcoal); }
+  .intro-promise-text strong { display: block; font-weight: 500; margin-bottom: 2px; }
+
+  .btn-primary {
+    display: inline-block;
+    margin-top: 36px;
+    padding: 18px 48px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { background: #b5603b; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,113,74,0.28); }
+
+  .intro-disclaimer {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--warm-gray);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    padding: 40px 0 0;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--warm-gray);
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--terracotta);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── QUESTION ── */
+  .question-number {
+    margin-top: 36px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+  }
+
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5vw, 30px);
+    line-height: 1.3;
+    margin-top: 10px;
+    color: var(--charcoal);
+    max-width: 520px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  @media (max-width: 480px) {
+    .options-grid { grid-template-columns: 1fr; }
+  }
+
+  .option-card {
+    padding: 18px 20px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .option-card:hover {
+    border-color: var(--terracotta);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+  }
+  .option-card.selected {
+    border-color: var(--terracotta);
+    background: #FDF0EB;
+  }
+  .option-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--terracotta);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .option-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--charcoal);
+  }
+
+  .btn-next {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 16px 44px;
+    background: var(--charcoal);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .btn-next.visible { opacity: 1; pointer-events: auto; }
+  .btn-next:hover { background: #1a1a1a; transform: translateY(-2px); }
+
+  /* ── LOADING ── */
+  #screen-loading {
+    text-align: center;
+    padding-top: 100px;
+  }
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--terracotta);
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--charcoal);
+  }
+  .loading-sub {
+    font-size: 13px;
+    color: var(--warm-gray);
+    margin-top: 8px;
+  }
+
+  /* ── RESULT ── */
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 44px;
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .result-type {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 8vw, 56px);
+    line-height: 1.08;
+    margin-top: 12px;
+  }
+
+  .result-tagline {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--warm-gray);
+    margin-top: 16px;
+    max-width: 480px;
+  }
+
+  .result-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .result-section-title {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  /* palette */
+  .palette-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .palette-swatch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .swatch-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+  }
+  .swatch-name {
+    font-size: 13px;
+    color: var(--charcoal);
+  }
+
+  /* first moves */
+  .moves-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .move-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .move-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+  }
+  .move-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--charcoal);
+    padding-top: 4px;
+  }
+  .move-text strong { font-weight: 500; display: block; }
+  .move-text span { color: var(--warm-gray); font-size: 13px; }
+
+  /* CTA block */
+  .cta-block {
+    margin-top: 36px;
+    padding: 32px 28px;
+    background: var(--charcoal);
+    border-radius: 20px;
+    color: white;
+  }
+  .cta-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+  .cta-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    line-height: 1.3;
+    color: white;
+    margin-bottom: 12px;
+  }
+  .cta-headline em { font-style: italic; color: var(--terracotta-light); }
+  .cta-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 24px;
+  }
+  .btn-cta {
+    display: inline-block;
+    padding: 16px 36px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  .btn-cta:hover { background: var(--terracotta-light); transform: translateY(-2px); }
+
+  .retake-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--warm-gray);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .retake-link:hover { color: var(--charcoal); }
+
+  /* ── EMAIL GATE ── */
+  .email-gate {
+    margin-top: 44px;
+    padding: 36px 28px;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+  .email-gate-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .email-gate-sub {
+    font-size: 14px;
+    color: var(--warm-gray);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .email-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .email-input-group input {
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--charcoal);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .email-input-group input:focus { border-color: var(--terracotta); }
+  .email-input-group input::placeholder { color: var(--warm-gray); }
+  .email-privacy {
+    font-size: 11px;
+    color: var(--warm-gray);
+    text-align: center;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-blob bg-blob-1"></div>
+<div class="bg-blob bg-blob-2"></div>
+
+<div class="quiz-wrapper">
+  <div class="brand">softspacebyl</div>
+
+  <!-- ── SCREEN: INTRO ── -->
+  <div id="screen-intro" class="screen active">
+    <span class="intro-eyebrow">Free 5-Minute Quiz</span>
+    <h1 class="intro-headline">
+      Stop<br><em>second-guessing</em><br>your space.
+    </h1>
+    <p class="intro-sub">
+      Answer 5 questions and get your exact style direction + 3 first moves made for your rental — no budget required to start.
+    </p>
+
+    <div class="intro-promise">
+      <span class="intro-promise-icon">✦</span>
+      <div class="intro-promise-text">
+        <strong>What you'll walk away with</strong>
+        Your style name, your color palette, and 3 concrete first moves — so you stop staring at your apartment wondering where to begin.
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startQuiz()">Find My Style →</button>
+    <div class="intro-disclaimer">
+      <span>✓</span> 5 questions &nbsp;·&nbsp; ✓ Instant result &nbsp;·&nbsp; ✓ Free
+    </div>
+  </div>
+
+  <!-- ── SCREEN: QUESTION ── -->
+  <div id="screen-question" class="screen">
+    <div class="progress-bar-wrap">
+      <div class="progress-meta">
+        <span id="progress-label">Question 1 of 5</span>
+        <span id="progress-pct">20%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:20%"></div>
+      </div>
+    </div>
+
+    <div class="question-number" id="q-number">01</div>
+    <h2 class="question-text" id="q-text"></h2>
+
+    <div class="options-grid" id="options-container"></div>
+
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Continue →</button>
+  </div>
+
+  <!-- ── SCREEN: EMAIL ── -->
+  <div id="screen-email" class="screen">
+    <div class="email-gate">
+      <h2 class="email-gate-headline">Your result is ready. ✦</h2>
+      <p class="email-gate-sub">Drop your email and I'll send you your style result + a free room-by-room starter guide.</p>
+      <div class="email-input-group">
+        <input type="text" id="input-name" placeholder="Your first name">
+        <input type="email" id="input-email" placeholder="Your best email">
+        <button class="btn-primary" style="width:100%;text-align:center;margin-top:0;" onclick="showResult()">Show My Result →</button>
+      </div>
+      <div class="email-privacy">🔒 No spam. Unsubscribe any time.</div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: LOADING ── -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Reading your space...</div>
+    <div class="loading-sub">Matching your answers to your style profile</div>
+  </div>
+
+  <!-- ── SCREEN: RESULT ── -->
+  <div id="screen-result" class="screen">
+    <!-- injected by JS -->
+  </div>
+
+</div>
+
+<script>
+  const questions = [
+    {
+      text: "When you walk into your apartment right now, you feel...",
+      options: [
+        { label: "A", text: "Overwhelmed — there's too much stuff and no order", scores: { warm:1, calm:0, playful:0, soft:0 } },
+        { label: "B", text: "Blank — it's empty and impersonal, like nobody lives there", scores: { warm:0, calm:1, playful:0, soft:0 } },
+        { label: "C", text: "Off — something's wrong but I can't name it", scores: { warm:0, calm:0, playful:1, soft:1 } },
+        { label: "D", text: "Almost there — just missing a few key pieces", scores: { warm:1, calm:0, playful:1, soft:0 } },
+      ]
+    },
+    {
+      text: "What stops you most from decorating?",
+      options: [
+        { label: "A", text: "I don't know where to start", scores: { warm:1, calm:0, playful:1, soft:0 } },
+        { label: "B", text: "I'm scared of wasting money on the wrong things", scores: { warm:0, calm:1, playful:0, soft:1 } },
+        { label: "C", text: "I don't know my style — everything looks good until it arrives", scores: { warm:0, calm:0, playful:1, soft:1 } },
+        { label: "D", text: "I rent — I can't paint or drill, so why bother", scores: { warm:1, calm:1, playful:0, soft:0 } },
+      ]
+    },
+    {
+      text: "Your dream space looks like...",
+      options: [
+        { label: "A", text: "Warm, layered, collected over time — like a story lives there", scores: { warm:2, calm:0, playful:0, soft:0 } },
+        { label: "B", text: "Clean, calm, intentional — only what matters, nothing more", scores: { warm:0, calm:2, playful:0, soft:0 } },
+        { label: "C", text: "Playful and personal — full of color and things I love", scores: { warm:0, calm:0, playful:2, soft:0 } },
+        { label: "D", text: "Cozy and natural — plants, wood, soft textures", scores: { warm:0, calm:0, playful:0, soft:2 } },
+      ]
+    },
+    {
+      text: "If you decided to refresh one room this weekend, you'd spend...",
+      options: [
+        { label: "A", text: "$0 — I'd work with what I have", scores: { warm:0, calm:1, playful:0, soft:1 } },
+        { label: "B", text: "Under $30 — small moves only", scores: { warm:1, calm:0, playful:0, soft:1 } },
+        { label: "C", text: "$30–$100 — willing to invest if it's the right thing", scores: { warm:1, calm:1, playful:0, soft:0 } },
+        { label: "D", text: "$100+ — I'd rather do it right once", scores: { warm:0, calm:0, playful:1, soft:1 } },
+      ]
+    },
+    {
+      text: "In 30 days, you want your home to feel...",
+      options: [
+        { label: "A", text: "Like ME — finally reflects my personality", scores: { warm:1, calm:0, playful:1, soft:0 } },
+        { label: "B", text: "Calm — a place where I can actually breathe", scores: { warm:0, calm:2, playful:0, soft:1 } },
+        { label: "C", text: "Finished — no more 'I'll deal with this later' corners", scores: { warm:1, calm:0, playful:0, soft:1 } },
+        { label: "D", text: "Pretty enough to stop apologizing when people come over", scores: { warm:0, calm:0, playful:2, soft:0 } },
+      ]
+    }
+  ];
+
+  const results = {
+    warm: {
+      badge: "✦ The Warm Collector",
+      badgeColor: "#C4714A",
+      badgeBg: "#FDF0EB",
+      title: "The Warm\nCollector",
+      titleColor: "#C4714A",
+      tagline: "Your space should feel like it has a story — layers, warmth, and pieces that actually mean something to you. You don't want a showroom. You want a home.",
+      palette: [
+        { color: "#C4714A", name: "Terracotta" },
+        { color: "#F0E6D3", name: "Warm Cream" },
+        { color: "#7A9E87", name: "Olive Green" },
+      ],
+      moves: [
+        { title: "Swap your textiles first.", detail: "A warm-toned throw and two textured cushions change the entire mood of a room — no drilling, no commitment." },
+        { title: "Add one piece of wood.", detail: "A small wooden tray, a shelf, or a stool grounds the space and makes it feel intentional, not assembled." },
+        { title: "Declutter your surfaces.", detail: "Group objects in threes on one surface and clear everything else. Negative space makes what stays look chosen." },
+      ]
+    },
+    calm: {
+      badge: "◯ The Calm Minimalist",
+      badgeColor: "#4A7A6A",
+      badgeBg: "#EBF4F0",
+      title: "The Calm\nMinimalist",
+      titleColor: "#4A7A6A",
+      tagline: "You want less noise, more intention. A space that makes you exhale the moment you walk in. For you, decorating isn't about adding — it's about editing down to what actually matters.",
+      palette: [
+        { color: "#F5F0EB", name: "Warm White" },
+        { color: "#B8AFA6", name: "Warm Gray" },
+        { color: "#C9D5C0", name: "Sage" },
+      ],
+      moves: [
+        { title: "Edit before you buy anything.", detail: "Walk through each room and remove 3 things you're keeping out of habit. You'll be surprised how much lighter it feels." },
+        { title: "Add one plant — one.", detail: "A single large plant in the right corner does more for a space than a shelf of small ones. Go big, go simple." },
+        { title: "Replace one harsh light.", detail: "Swap one overhead light for a warm lamp. Lighting temperature transforms the feel of a room more than any decor piece." },
+      ]
+    },
+    playful: {
+      badge: "★ The Playful Maximalist",
+      badgeColor: "#B05A2A",
+      badgeBg: "#FEF0E6",
+      title: "The Playful\nMaximalist",
+      titleColor: "#B05A2A",
+      tagline: "Your space should be unapologetically YOU. Color, personality, things that make people stop and ask 'where did you get that?' You've been playing it safe — and deep down you know it.",
+      palette: [
+        { color: "#D4824A", name: "Burnt Orange" },
+        { color: "#3B6070", name: "Petrol Blue" },
+        { color: "#E8C85A", name: "Mustard" },
+      ],
+      moves: [
+        { title: "Create one wall of art.", detail: "Print 3–5 pieces you love (even from free sites) and group them on one wall. It costs under $20 and changes everything." },
+        { title: "Add one color — commit to it.", detail: "Pick one color and bring it in through a throw, a vase, and a candle. Repetition makes it look intentional, not random." },
+        { title: "Stop hiding your personality.", detail: "That stack of books, that object from your travels — put it where people can see it. Your home should look like YOU live there." },
+      ]
+    },
+    soft: {
+      badge: "❧ The Soft Naturalist",
+      badgeColor: "#5A8060",
+      badgeBg: "#EDF4EE",
+      title: "The Soft\nNaturalist",
+      titleColor: "#5A8060",
+      tagline: "You want your space to feel like a breath of fresh air. Natural, calm, alive. Not stark. Not trendy. Just the kind of cozy that makes you want to stay in on a Sunday and never leave.",
+      palette: [
+        { color: "#E8DDD0", name: "Warm Beige" },
+        { color: "#8FAE8A", name: "Sage Green" },
+        { color: "#A0805A", name: "Warm Brown" },
+      ],
+      moves: [
+        { title: "Bring in two plants, different heights.", detail: "A tall floor plant and a small tabletop plant at different eye levels create depth and life in any corner." },
+        { title: "Replace plastic with natural materials.", detail: "Swap one storage piece for a woven basket. Add a linen cushion. Natural textures warm up a space instantly." },
+        { title: "Find your 'anchor piece'.", detail: "One wooden coffee table, a rattan chair, or a jute rug can tie your whole room together. Look second-hand first." },
+      ]
+    }
+  };
+
+  let currentQ = 0;
+  let scores = { warm: 0, calm: 0, playful: 0, soft: 0 };
+  let selectedOption = null;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    el.classList.add('active');
+    // restart animation
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = '';
+  }
+
+  function startQuiz() {
+    currentQ = 0;
+    scores = { warm: 0, calm: 0, playful: 0, soft: 0 };
+    renderQuestion();
+    showScreen('screen-question');
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQ];
+    const total = questions.length;
+    const pct = Math.round(((currentQ + 1) / total) * 100);
+
+    document.getElementById('progress-label').textContent = `Question ${currentQ + 1} of ${total}`;
+    document.getElementById('progress-pct').textContent = `${pct}%`;
+    document.getElementById('progress-fill').style.width = `${pct}%`;
+    document.getElementById('q-number').textContent = String(currentQ + 1).padStart(2, '0');
+    document.getElementById('q-text').textContent = q.text;
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    selectedOption = null;
+    document.getElementById('btn-next').classList.remove('visible');
+
+    q.options.forEach((opt, i) => {
+      const card = document.createElement('button');
+      card.className = 'option-card';
+      card.innerHTML = `<div class="option-label">${opt.label}</div><div class="option-text">${opt.text}</div>`;
+      card.onclick = () => selectOption(card, opt, i);
+      container.appendChild(card);
+    });
+  }
+
+  function selectOption(card, opt, idx) {
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedOption = opt;
+    document.getElementById('btn-next').classList.add('visible');
+  }
+
+  function nextQuestion() {
+    if (!selectedOption) return;
+    // add scores
+    for (const key in selectedOption.scores) {
+      scores[key] += selectedOption.scores[key];
+    }
+    if (currentQ < questions.length - 1) {
+      currentQ++;
+      renderQuestion();
+      // restart animation
+      const s = document.getElementById('screen-question');
+      s.style.animation = 'none';
+      s.offsetHeight;
+      s.style.animation = 'fadeUp 0.4s ease forwards';
+    } else {
+      showScreen('screen-email');
+    }
+  }
+
+  function showResult() {
+    const nameVal = document.getElementById('input-name').value.trim();
+    const emailVal = document.getElementById('input-email').value.trim();
+    // basic validation
+    if (!emailVal || !emailVal.includes('@')) {
+      document.getElementById('input-email').style.borderColor = '#C4714A';
+      return;
+    }
+    showScreen('screen-loading');
+    setTimeout(() => {
+      buildResult(nameVal);
+      showScreen('screen-result');
+    }, 2200);
+  }
+
+  function buildResult(name) {
+    // determine winner
+    let winner = 'warm';
+    let max = 0;
+    for (const key in scores) {
+      if (scores[key] > max) { max = scores[key]; winner = key; }
+    }
+    const r = results[winner];
+    const greeting = name ? `${name}, you're` : "You're";
+    const titleLines = r.title.split('\n');
+
+    const swatchesHTML = r.palette.map(p => `
+      <div class="palette-swatch">
+        <div class="swatch-circle" style="background:${p.color}"></div>
+        <span class="swatch-name">${p.name}</span>
+      </div>
+    `).join('');
+
+    const movesHTML = r.moves.map((m, i) => `
+      <div class="move-item">
+        <div class="move-num" style="background:${r.titleColor}">${i+1}</div>
+        <div class="move-text"><strong>${m.title}</strong><span>${m.detail}</span></div>
+      </div>
+    `).join('');
+
+    document.getElementById('screen-result').innerHTML = `
+      <div class="result-badge" style="background:${r.badgeBg};color:${r.badgeColor}">${r.badge}</div>
+      <h2 class="result-type" style="color:${r.titleColor}">${titleLines[0]}<br>${titleLines[1]}</h2>
+      <p class="result-tagline">${greeting} a <strong>${r.title.replace('\n',' ')}</strong>. ${r.tagline}</p>
+
+      <div class="result-divider"></div>
+
+      <div class="result-section-title">Your Color Palette</div>
+      <div class="palette-row">${swatchesHTML}</div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-section-title">Your 3 First Moves</div>
+      <div class="moves-list">${movesHTML}</div>
+
+      <div class="cta-block">
+        <div class="cta-eyebrow">Ready for the full plan?</div>
+        <h3 class="cta-headline">Decorate Your Rental <em>Without Breaking Anything</em></h3>
+        <p class="cta-body">Room by room, in 7 days, on any budget. No drilling, no commitment, no more second-guessing. The complete method for renters who are done waiting.</p>
+        <a href="#" class="btn-cta">See What's Inside →</a>
+      </div>
+
+      <span class="retake-link" onclick="retake()">← Retake the quiz</span>
+    `;
+  }
+
+  function retake() {
+    scores = { warm: 0, calm: 0, playful: 0, soft: 0 };
+    currentQ = 0;
+    document.getElementById('input-name').value = '';
+    document.getElementById('input-email').value = '';
+    showScreen('screen-intro');
+  }
+</script>
+</body>
+</html>
