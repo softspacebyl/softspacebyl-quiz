@@ -8,18 +8,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #F7F3EE;
+    --cream: #FDFAF7;
     --warm-white: #FDFAF7;
-    --terracotta: #C4714A;
-    --terracotta-light: #E8977A;
-    --sage: #7A9E87;
-    --charcoal: #2C2C2C;
+    --chocolate: #7A5C4A;
+    --bordo: #7A4545;
+    --charcoal: #1A1A1A;
     --warm-gray: #9A8F85;
     --border: #E2D9D0;
-    --result-warm: #C4714A;
-    --result-calm: #7A9E87;
-    --result-playful: #C4845A;
-    --result-soft: #8FAE8A;
+    --accent: #7A5C4A;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,8 +37,8 @@
     pointer-events: none;
     z-index: 0;
   }
-  .bg-blob-1 { width: 500px; height: 500px; background: var(--terracotta); top: -150px; right: -100px; }
-  .bg-blob-2 { width: 400px; height: 400px; background: var(--sage); bottom: -100px; left: -80px; }
+  .bg-blob-1 { width: 500px; height: 500px; background: #C8BFB8; top: -150px; right: -100px; }
+  .bg-blob-2 { width: 400px; height: 400px; background: #D5CFC9; bottom: -100px; left: -80px; }
 
   /* ── WRAPPER ── */
   .quiz-wrapper {
@@ -81,7 +77,7 @@
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--terracotta);
+    color: #7A5C4A;
     font-weight: 500;
   }
 
@@ -95,7 +91,7 @@
 
   .intro-headline em {
     font-style: italic;
-    color: var(--terracotta);
+    color: #7A5C4A;
   }
 
   .intro-sub {
@@ -124,8 +120,8 @@
     display: inline-block;
     margin-top: 36px;
     padding: 18px 48px;
-    background: var(--terracotta);
-    color: white;
+    background: #7A5C4A;
+    color: #FDFAF7;
     border: none;
     border-radius: 100px;
     font-family: 'DM Sans', sans-serif;
@@ -135,7 +131,7 @@
     transition: all 0.2s ease;
     letter-spacing: 0.02em;
   }
-  .btn-primary:hover { background: #b5603b; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,113,74,0.28); }
+  .btn-primary:hover { background: #7A4545; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(107,63,42,0.28); }
 
   .intro-disclaimer {
     margin-top: 14px;
@@ -167,7 +163,7 @@
   }
   .progress-fill {
     height: 100%;
-    background: var(--terracotta);
+    background: #7A5C4A;
     border-radius: 2px;
     transition: width 0.4s ease;
   }
@@ -178,7 +174,7 @@
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--terracotta);
+    color: #7A5C4A;
     font-weight: 500;
   }
 
@@ -213,18 +209,18 @@
     font-family: 'DM Sans', sans-serif;
   }
   .option-card:hover {
-    border-color: var(--terracotta);
+    border-color: #7A5C4A;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.07);
   }
   .option-card.selected {
-    border-color: var(--terracotta);
-    background: #FDF0EB;
+    border-color: #7A5C4A;
+    background: #F5EDE8;
   }
   .option-label {
     font-size: 13px;
     font-weight: 500;
-    color: var(--terracotta);
+    color: #7A5C4A;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     margin-bottom: 4px;
@@ -263,7 +259,7 @@
     width: 48px;
     height: 48px;
     border: 3px solid var(--border);
-    border-top-color: var(--terracotta);
+    border-top-color: #7A5C4A;
     border-radius: 50%;
     margin: 0 auto 24px;
     animation: spin 0.8s linear infinite;
@@ -320,7 +316,7 @@
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--warm-gray);
+    color: #9A8F85;
     font-weight: 500;
     margin-bottom: 16px;
   }
@@ -418,8 +414,8 @@
   .btn-cta {
     display: inline-block;
     padding: 16px 36px;
-    background: var(--terracotta);
-    color: white;
+    background: #7A5C4A;
+    color: #FDFAF7;
     border: none;
     border-radius: 100px;
     font-family: 'DM Sans', sans-serif;
@@ -429,7 +425,7 @@
     transition: all 0.2s ease;
     text-decoration: none;
   }
-  .btn-cta:hover { background: var(--terracotta-light); transform: translateY(-2px); }
+  .btn-cta:hover { background: #7A4545; transform: translateY(-2px); }
 
   .retake-link {
     display: block;
@@ -621,10 +617,10 @@
   const results = {
     warm: {
       badge: "✦ The Warm Collector",
-      badgeColor: "#C4714A",
-      badgeBg: "#FDF0EB",
+      badgeColor: "#7A5C4A",
+      badgeBg: "#F5EDE8",
       title: "The Warm\nCollector",
-      titleColor: "#C4714A",
+      titleColor: "#7A5C4A",
       tagline: "Your space should feel like it has a story — layers, warmth, and pieces that actually mean something to you. You don't want a showroom. You want a home.",
       palette: [
         { color: "#C4714A", name: "Terracotta" },
@@ -639,10 +635,10 @@
     },
     calm: {
       badge: "◯ The Calm Minimalist",
-      badgeColor: "#4A7A6A",
-      badgeBg: "#EBF4F0",
+      badgeColor: "#7A4545",
+      badgeBg: "#F5EDED",
       title: "The Calm\nMinimalist",
-      titleColor: "#4A7A6A",
+      titleColor: "#7A4545",
       tagline: "You want less noise, more intention. A space that makes you exhale the moment you walk in. For you, decorating isn't about adding — it's about editing down to what actually matters.",
       palette: [
         { color: "#F5F0EB", name: "Warm White" },
@@ -657,10 +653,10 @@
     },
     playful: {
       badge: "★ The Playful Maximalist",
-      badgeColor: "#B05A2A",
-      badgeBg: "#FEF0E6",
+      badgeColor: "#7A4545",
+      badgeBg: "#F5E8E8",
       title: "The Playful\nMaximalist",
-      titleColor: "#B05A2A",
+      titleColor: "#7A4545",
       tagline: "Your space should be unapologetically YOU. Color, personality, things that make people stop and ask 'where did you get that?' You've been playing it safe — and deep down you know it.",
       palette: [
         { color: "#D4824A", name: "Burnt Orange" },
@@ -675,10 +671,10 @@
     },
     soft: {
       badge: "❧ The Soft Naturalist",
-      badgeColor: "#5A8060",
-      badgeBg: "#EDF4EE",
+      badgeColor: "#7A5C4A",
+      badgeBg: "#F5EDE8",
       title: "The Soft\nNaturalist",
-      titleColor: "#5A8060",
+      titleColor: "#7A5C4A",
       tagline: "You want your space to feel like a breath of fresh air. Natural, calm, alive. Not stark. Not trendy. Just the kind of cozy that makes you want to stay in on a Sunday and never leave.",
       palette: [
         { color: "#E8DDD0", name: "Warm Beige" },
