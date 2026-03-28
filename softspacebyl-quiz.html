@@ -250,6 +250,26 @@
   .btn-next.visible { opacity: 1; pointer-events: auto; }
   .btn-next:hover { background: #1a1a1a; transform: translateY(-2px); }
 
+  .btn-back {
+    display: inline-block;
+    padding: 16px 28px;
+    background: transparent;
+    color: var(--warm-gray);
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .btn-back.visible { opacity: 1; pointer-events: auto; }
+  .btn-back:hover { border-color: var(--warm-gray); color: var(--charcoal); }
+
+  .nav-buttons { display: flex; align-items: center; gap: 12px; margin-top: 28px; }
+
   /* ── LOADING ── */
   #screen-loading {
     text-align: center;
@@ -534,7 +554,10 @@
 
     <div class="options-grid" id="options-container"></div>
 
-    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Continue →</button>
+    <div class="nav-buttons">
+      <button class="btn-back" id="btn-back" onclick="prevQuestion()">← back</button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Continue →</button>
+    </div>
   </div>
 
   <!-- ── SCREEN: EMAIL ── -->
@@ -726,6 +749,14 @@
     selectedOption = null;
     document.getElementById('btn-next').classList.remove('visible');
 
+    // Show/hide back button
+    const btnBack = document.getElementById('btn-back');
+    if (currentQ > 0) {
+      btnBack.classList.add('visible');
+    } else {
+      btnBack.classList.remove('visible');
+    }
+
     q.options.forEach((opt, i) => {
       const card = document.createElement('button');
       card.className = 'option-card';
@@ -740,6 +771,17 @@
     card.classList.add('selected');
     selectedOption = opt;
     document.getElementById('btn-next').classList.add('visible');
+  }
+
+  function prevQuestion() {
+    if (currentQ > 0) {
+      currentQ--;
+      renderQuestion();
+      const s = document.getElementById('screen-question');
+      s.style.animation = 'none';
+      s.offsetHeight;
+      s.style.animation = 'fadeUp 0.4s ease forwards';
+    }
   }
 
   function nextQuestion() {
