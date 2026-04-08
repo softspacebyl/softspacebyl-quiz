@@ -476,7 +476,7 @@ function submitEmail() {
   const formData = new FormData();
   formData.append('email_address', email);
   formData.append('fields[diagnosis]', diagnosisKey || 'unknown');
-  fetch('https://app.kit.com/forms/YOUR_FORM_ID/subscriptions', {
+  fetch('https://app.kit.com/forms/9256678/subscriptions', {
     method:'POST', body: formData,
     headers:{'Accept':'application/json'}
   }).catch(()=>{});
