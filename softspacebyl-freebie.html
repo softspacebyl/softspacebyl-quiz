@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>your first 3 moves — softspacebyl</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --cream:#FDFAF7;--black:#1A1A1A;--choco:#7A5C4A;
+    --bordo:#8B2E2E;--grey:#9A8F85;--light:#F0EBE5;
+    --warm:#C4956A;
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--cream);color:var(--black);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:0 16px 60px;
+  }
+
+  /* TOP BAR */
+  .topbar{
+    width:100%;max-width:600px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 0 0;margin-bottom:40px;
+  }
+  .brand{font-size:12px;color:var(--grey);letter-spacing:.08em}
+  .progress-wrap{display:flex;gap:6px;align-items:center}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--light);transition:background .3s}
+  .dot.active{background:var(--bordo)}
+  .dot.done{background:var(--choco)}
+
+  /* SCREENS */
+  .screen{display:none;width:100%;max-width:560px;animation:fadeIn .4s ease}
+  .screen.visible{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* INTRO */
+  .intro-tag{font-size:11px;color:var(--grey);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+  .intro h1{font-size:clamp(28px,6vw,40px);font-weight:700;line-height:1.15;margin-bottom:16px;color:var(--black)}
+  .intro h1 em{font-style:normal;color:var(--bordo)}
+  .intro p{font-size:16px;color:var(--grey);line-height:1.7;margin-bottom:32px;max-width:440px}
+  .intro-list{list-style:none;margin-bottom:36px}
+  .intro-list li{font-size:14px;color:var(--black);padding:8px 0;border-bottom:1px solid var(--light);display:flex;align-items:center;gap:10px}
+  .intro-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--bordo);flex-shrink:0}
+
+  /* QUESTION */
+  .q-label{font-size:11px;color:var(--grey);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+  .q-text{font-size:clamp(18px,4vw,24px);font-weight:700;line-height:1.3;color:var(--black);margin-bottom:12px}
+  .q-sub{font-size:14px;color:var(--grey);line-height:1.6;margin-bottom:36px}
+  .q-options{display:flex;flex-direction:column;gap:10px;margin-bottom:36px}
+  .q-opt{
+    padding:16px 20px;border-radius:10px;border:1.5px solid var(--light);
+    background:white;cursor:pointer;font-size:15px;color:var(--black);
+    text-align:left;transition:all .2s;line-height:1.4;
+  }
+  .q-opt:hover{border-color:var(--choco);background:var(--light)}
+  .q-opt.selected{border-color:var(--bordo);background:#FDF5F5}
+
+  /* RESULT */
+  .result-tag{font-size:11px;color:var(--grey);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+  .result-diagnosis{
+    background:var(--black);color:var(--cream);
+    border-radius:12px;padding:28px;margin-bottom:28px;
+  }
+  .result-diagnosis h2{font-size:13px;color:var(--grey);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+  .result-diagnosis p{font-size:18px;font-weight:700;line-height:1.4;color:var(--cream)}
+  .result-diagnosis .sub{font-size:13px;color:var(--grey);margin-top:8px;font-weight:400;line-height:1.6}
+
+  .plan-title{font-size:14px;font-weight:700;color:var(--choco);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+  .day-card{
+    border-left:3px solid var(--bordo);padding:14px 16px;
+    margin-bottom:10px;background:white;border-radius:0 8px 8px 0;
+  }
+  .day-card .day-num{font-size:11px;color:var(--bordo);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+  .day-card .day-task{font-size:14px;font-weight:700;color:var(--black);margin-bottom:3px}
+  .day-card .day-desc{font-size:13px;color:var(--grey);line-height:1.5}
+
+  .cta-box{
+    background:var(--bordo);border-radius:12px;padding:24px;margin-top:28px;
+    text-align:center;
+  }
+  .cta-box p{font-size:14px;color:rgba(253,250,247,.8);margin-bottom:16px;line-height:1.6}
+  .cta-box a{
+    display:inline-block;background:var(--cream);color:var(--bordo);
+    font-size:14px;font-weight:700;padding:12px 28px;border-radius:8px;
+    text-decoration:none;transition:opacity .2s;
+  }
+  .cta-box a:hover{opacity:.85}
+
+  /* EMAIL CAPTURE */
+  .email-wrap{margin-top:28px;padding:24px;background:var(--light);border-radius:12px}
+  .email-wrap p{font-size:13px;color:var(--grey);margin-bottom:14px;line-height:1.6}
+  .email-wrap p strong{color:var(--black)}
+  .email-row{display:flex;gap:8px;flex-wrap:wrap}
+  .email-row input{
+    flex:1;min-width:200px;padding:12px 14px;border-radius:8px;
+    border:1.5px solid var(--light);background:white;font-size:14px;
+    color:var(--black);outline:none;
+  }
+  .email-row input:focus{border-color:var(--choco)}
+  .email-row button{
+    padding:12px 20px;border-radius:8px;background:var(--choco);
+    color:var(--cream);font-size:14px;font-weight:700;border:none;cursor:pointer;
+    white-space:nowrap;transition:opacity .2s;
+  }
+  .email-row button:hover{opacity:.85}
+  .email-success{font-size:13px;color:var(--choco);font-weight:700;padding:12px 0;display:none}
+
+  /* BUTTONS */
+  .btn{
+    display:inline-block;padding:14px 32px;border-radius:10px;
+    background:var(--black);color:var(--cream);font-size:15px;font-weight:700;
+    border:none;cursor:pointer;transition:opacity .2s;text-align:center;
+  }
+  .btn:hover{opacity:.8}
+  .btn-back{
+    display:inline-block;padding:10px 0;font-size:13px;color:var(--grey);
+    background:none;border:none;cursor:pointer;margin-top:12px;
+  }
+  .btn-back:hover{color:var(--black)}
+
+  .footer-brand{text-align:center;font-size:11px;color:var(--grey);margin-top:40px;letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">softspacebyl</span>
+  <div class="progress-wrap" id="progress"></div>
+</div>
+
+<!-- SCREEN 0: INTRO -->
+<div class="screen visible" id="s0">
+  <div class="intro">
+    <p class="intro-tag">free audit</p>
+    <h1>your home feels off.<br><em>let's find out why.</em></h1>
+    <p>10 yes/no questions about your space. you'll get a diagnosis of your main problem and a personalized 7-day plan to fix it — without renovating or spending more than $100.</p>
+    <ul class="intro-list">
+      <li>takes 2 minutes</li>
+      <li>no style quiz, no moodboard — just your actual problem</li>
+      <li>your 7-day plan at the end</li>
+    </ul>
+    <button class="btn" onclick="startQuiz()">start the audit</button>
+  </div>
+</div>
+
+<!-- SCREEN 1-10: QUESTIONS -->
+<div class="screen" id="sq">
+  <p class="q-label" id="q-label">question 1 of 10</p>
+  <p class="q-text" id="q-text"></p>
+  <p class="q-sub" id="q-sub"></p>
+  <div class="q-options" id="q-opts"></div>
+  <button class="btn-back" onclick="goBack()">← back</button>
+</div>
+
+<!-- SCREEN 2: RESULT -->
+<div class="screen" id="sresult">
+  <p class="result-tag">your diagnosis</p>
+  <div class="result-diagnosis">
+    <h2>your main problem</h2>
+    <p id="diag-title"></p>
+    <p class="sub" id="diag-sub"></p>
+  </div>
+
+  <p class="plan-title">your 7-day plan</p>
+  <div id="plan-days"></div>
+
+  <div class="email-wrap">
+    <p><strong>want this sent to your inbox?</strong> enter your email and we'll send you the full plan as a pdf — plus the next step when you're ready.</p>
+    <div class="email-row">
+      <input type="email" id="email-input" placeholder="your@email.com">
+      <button onclick="submitEmail()">send it</button>
+    </div>
+    <p class="email-success" id="email-ok">you're in. check your inbox.</p>
+  </div>
+
+  <div class="cta-box">
+    <p>want the complete method? rent it. own it. is a 7-day guide that walks you through every room — with real before/after photos from a real rental.</p>
+    <a href="https://soft-space-by-l.kit.com/a3e45176d4" target="_blank">get the full course — $47</a>
+  </div>
+</div>
+
+<p class="footer-brand">softspacebyl &nbsp;·&nbsp; @softspacebyl</p>
+
+<script>
+const questions = [
+  {
+    text: "when you walk into your main living area, does your eye know where to go?",
+    sub: "is there one thing that immediately draws your attention — or does it bounce around?",
+    yes: "anchor", no: "anchor"
+  },
+  {
+    text: "is there one surface in your home that always looks messy, no matter how many times you clean it?",
+    sub: "a kitchen counter, a nightstand, an entryway table — somewhere things just pile up.",
+    yes: "clutter", no: null
+  },
+  {
+    text: "is there a room or corner in your home you avoid looking at?",
+    sub: "a spot that just feels 'off' and you've been ignoring it.",
+    yes: "avoided", no: null
+  },
+  {
+    text: "do you have things in a cart — Amazon, IKEA, anywhere — that you haven't bought yet?",
+    sub: "items you keep adding and removing, unsure if they'll actually work.",
+    yes: "cart", no: null
+  },
+  {
+    text: "does your furniture feel like it's the wrong size for your space?",
+    sub: "either too big and cramped, or too small and floating.",
+    yes: "scale", no: null
+  },
+  {
+    text: "is your main lighting overhead — a ceiling fixture or recessed lights?",
+    sub: "not floor lamps or table lamps — just lights from above.",
+    yes: "light", no: null
+  },
+  {
+    text: "do your surfaces have more than 5 objects on them right now?",
+    sub: "coffee table, nightstand, kitchen counter — anywhere things collect.",
+    yes: "surface", no: null
+  },
+  {
+    text: "have you rearranged your furniture more than twice in the last year and still aren't happy?",
+    sub: "moving things around but nothing ever feels quite right.",
+    yes: "layout", no: null
+  },
+  {
+    text: "does your space feel like it belongs to someone else?",
+    sub: "like it could be anyone's apartment — not specifically yours.",
+    yes: "identity", no: null
+  },
+  {
+    text: "do you feel paralyzed when trying to make decisions about your space?",
+    sub: "you know something needs to change but you don't know where to start.",
+    yes: "paralysis", no: null
+  }
+];
+
+const diagnoses = {
+  anchor: {
+    title: "your space has no anchor — and the eye has nowhere to land.",
+    sub: "every room needs one large item that everything else responds to. without it, even beautiful things look chaotic.",
+    problem: "anchor"
+  },
+  clutter: {
+    title: "you have a placement problem, not a clutter problem.",
+    sub: "the things that always look messy aren't the problem — they're in the wrong place. we fix the system, not the stuff.",
+    problem: "clutter"
+  },
+  scale: {
+    title: "your furniture is the wrong size for your space.",
+    sub: "this is the most invisible problem — your brain registers 'something is off' without knowing why. scale mismatch fixes everything.",
+    problem: "scale"
+  },
+  light: {
+    title: "overhead lighting is making your space feel flat and cold.",
+    sub: "overhead light illuminates equally — which reads as institutional. warm light at eye level changes the whole feeling of a room.",
+    problem: "light"
+  },
+  surface: {
+    title: "your surfaces are doing too much work.",
+    sub: "30% of objects on any surface — removed — makes the space look bigger and more intentional immediately. no new purchases needed.",
+    problem: "surface"
+  },
+  cart: {
+    title: "you're trying to buy your way out of a clarity problem.",
+    sub: "the cart will never feel complete because you don't yet know what specific problem each item is solving. we fix that first.",
+    problem: "cart"
+  },
+  paralysis: {
+    title: "decision paralysis is your main blocker — not your space.",
+    sub: "the problem isn't your apartment. it's not knowing where to start. once you have a system, every decision becomes binary.",
+    problem: "paralysis"
+  },
+  layout: {
+    title: "you're rearranging without a framework — so nothing sticks.",
+    sub: "rearranging works when you start from the anchor piece. without that, you're moving things around randomly and hoping for the right result.",
+    problem: "layout"
+  },
+  identity: {
+    title: "your space doesn't feel like you — and you're treating it as temporary.",
+    sub: "renters often don't fully commit to their space because 'it's just a rental.' that's the real problem. your space is not temporary. you are not temporary.",
+    problem: "identity"
+  }
+};
+
+const plans = {
+  anchor: [
+    {day:1, task:"audit + anchor", desc:"Walk every room. For each one, ask: what's the largest item here? That's your anchor. Write it down."},
+    {day:2, task:"living area reset", desc:"Apply the 20-minute method. Empty surfaces, then rebuild everything responding to the anchor."},
+    {day:3, task:"bedroom anchor", desc:"The bed is the anchor. Every object on the nightstand, every piece of art — all respond to it."},
+    {day:4, task:"remove 30%", desc:"Take 30% of objects off every surface. Put them in a box. Live without them for a week."},
+    {day:5, task:"group in odd numbers", desc:"Arrange remaining objects in groups of 1, 3, or 5. Vary the height within each group."},
+    {day:6, task:"one optional purchase", desc:"If you're still missing an anchor piece — a large mirror, a rug, one piece of art — today is the day."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1."},
+  ],
+  clutter: [
+    {day:1, task:"identify the problem surface", desc:"Find the one surface that always looks messy. That's your focus this week."},
+    {day:2, task:"empty and audit", desc:"Remove everything from that surface. Ask: what actually belongs here? What's just landing here?"},
+    {day:3, task:"create a home for homeless things", desc:"Every item that was on that surface needs a specific home. Drawer, basket, shelf — somewhere intentional."},
+    {day:4, task:"the 20-minute kitchen", desc:"Clear the kitchen counters to daily-use items only. Countertops are not storage."},
+    {day:5, task:"entryway system", desc:"One hook, one surface, nothing on the floor. Create a landing zone for things that enter the house."},
+    {day:6, task:"the nightstand edit", desc:"3 objects max on the nightstand. Everything else finds a home."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1."},
+  ],
+  scale: [
+    {day:1, task:"audit the scale", desc:"Stand in each room and look at the biggest piece of furniture. Does it fit the room or fight it?"},
+    {day:2, task:"the rug test", desc:"If you have a rug, pull it out from under the furniture. It's probably too small. The rug should be large enough for all front legs of furniture to sit on it."},
+    {day:3, task:"breathing room", desc:"Move your largest furniture 6 inches away from the walls. Rooms feel bigger when furniture floats slightly."},
+    {day:4, task:"remove the filler furniture", desc:"Small accent pieces that don't anchor anything — chairs nobody sits in, tables that just collect things — box them."},
+    {day:5, task:"identify the one gap", desc:"What one piece, if scaled correctly, would change everything? Write it down. Don't buy yet."},
+    {day:6, task:"apply the 5-minute rule", desc:"For every potential purchase: does this solve the specific scale problem I identified? If not — close the tab."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1."},
+  ],
+  light: [
+    {day:1, task:"light audit", desc:"Walk every room at night with only overhead lights on. Notice how it feels. Then turn them off, add a lamp, notice the difference."},
+    {day:2, task:"the lamp test", desc:"Put one lamp — any lamp — in your main living area. Turn off the overhead. That's your baseline."},
+    {day:3, task:"warm bulbs", desc:"Replace any cool white bulbs (5000K+) with warm white (2700K-3000K). Under $15. Biggest single change you can make."},
+    {day:4, task:"layers of light", desc:"Every room needs 3 types of light: overhead (existing), task (lamp by a chair or desk), and ambient (candle, string lights)."},
+    {day:5, task:"the bedroom", desc:"No overhead light in the bedroom after 8pm. One warm lamp on each side of the bed minimum."},
+    {day:6, task:"one floor lamp", desc:"If you're ready to buy: one floor lamp in the living area to replace overhead. This is the single highest-ROI purchase."},
+    {day:7, task:"the walk-through", desc:"Walk through at night with your new lighting. Take a photo. Compare to day 1."},
+  ],
+  surface: [
+    {day:1, task:"the 30% audit", desc:"Walk every surface and count the objects. Remove 30%. Put them in a box. You can always put them back."},
+    {day:2, task:"odd numbers", desc:"Arrange remaining objects in groups of 1, 3, or 5. Even numbers look accidental. Odd numbers look intentional."},
+    {day:3, task:"vary the height", desc:"Within each group: one tall, one medium, one low. The eye reads this as a design decision."},
+    {day:4, task:"kitchen counters", desc:"Countertops are not storage. Keep only what you use daily — coffee maker, knife block, one plant."},
+    {day:5, task:"the bathroom counter", desc:"5 objects max. Everything else goes in a drawer or cabinet."},
+    {day:6, task:"the forgotten surfaces", desc:"Top of the fridge. The windowsill. The floor by the door. These count too."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1."},
+  ],
+  cart: [
+    {day:1, task:"close the cart", desc:"Open your cart (Amazon, IKEA, wherever). For each item, ask: what specific problem does this solve? If you can't answer in 30 seconds, remove it."},
+    {day:2, task:"the $0 reset first", desc:"Before buying anything, do the 20-minute reset in your main living area. Empty, anchor, rebuild."},
+    {day:3, task:"identify the real gap", desc:"After the reset — what's actually missing? Write it down. One thing, specifically."},
+    {day:4, task:"the 3 high-ROI objects", desc:"A rug, a large mirror, or one piece of meaningful art. These three have the highest return. Everything else is secondary."},
+    {day:5, task:"apply the budget framework", desc:"$0: rearrange. $20: candle, plant, throw. $50: one quality piece. $100: rug, mirror, or lamp. Pick your tier."},
+    {day:6, task:"one intentional purchase", desc:"One thing, the right thing. Spend the money you would have spent on three wrong things."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1."},
+  ],
+  paralysis: [
+    {day:1, task:"the 3-question audit", desc:"1. Where does your eye go first? 2. What always looks messy? 3. What corner do you avoid? Write the answers. That's your priority list."},
+    {day:2, task:"start with the avoided corner", desc:"The corner you've been ignoring. Set a 20-minute timer. Empty it, anchor it, rebuild it. Stop when the timer goes off."},
+    {day:3, task:"one decision, one surface", desc:"Pick one surface. Remove everything. Put back only what has a specific reason to be there. That's it for today."},
+    {day:4, task:"the 5-minute rule", desc:"Every decision from now on: does this solve a specific problem from my audit? If yes — do it. If no — move on."},
+    {day:5, task:"the bedroom", desc:"The bed is the anchor. Everything else responds to it. 20 minutes. Timer on."},
+    {day:6, task:"the kitchen", desc:"Counters to daily-use only. One category at a time. 20 minutes."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1. The method works. You just have to start."},
+  ],
+  layout: [
+    {day:1, task:"find the anchor first", desc:"Before moving anything: what's the largest piece of furniture in your main room? That's the anchor. Everything responds to it — not the other way around."},
+    {day:2, task:"the 20-minute reset", desc:"Set the timer. Move the anchor first. Then arrange everything else around it. Stop at 20 minutes."},
+    {day:3, task:"breathing room", desc:"6 inches from the walls. Furniture should float slightly — not be pushed against every wall."},
+    {day:4, task:"define zones", desc:"Every room needs a clear purpose. If your living room also has a desk, a workout corner, and a storage area — that's three rooms fighting for one space. Pick one zone per room."},
+    {day:5, task:"the traffic test", desc:"Walk your natural path through the room. If furniture blocks it, that's what needs to move."},
+    {day:6, task:"the rug test", desc:"A rug defines a zone even without walls. If you don't have one — consider it before your next furniture move."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Compare to day 1."},
+  ],
+  identity: [
+    {day:1, task:"3-word feeling", desc:"Write down 3 words that describe how you want your space to feel. Not how it looks — how it feels. Those 3 words are your filter for every decision this week."},
+    {day:2, task:"what already feels right", desc:"Walk your space and find the one thing that already feels like you. One object, one corner, one detail. Start there and build outward."},
+    {day:3, task:"remove the temporariness", desc:"Take down the thing you've been meaning to fix 'when you move.' Hang the picture. Put up the shelf. You live here now."},
+    {day:4, task:"one meaningful object", desc:"One thing that's specifically yours — not generic decor. A book, a plant, a piece you love. Give it a place."},
+    {day:5, task:"the $0 reset", desc:"20 minutes in the main living area. Empty, anchor, rebuild. Use your 3-word feeling as the filter."},
+    {day:6, task:"one intentional purchase", desc:"Not a purchase to fill space — a purchase because it matches your 3 words. One thing. Under $50."},
+    {day:7, task:"the walk-through", desc:"Walk through as if you've never seen it. Take a photo. Ask: does this feel like mine? Compare to day 1."},
+  ],
+};
+
+let currentQ = 0;
+let answers = [];
+let diagnosisKey = null;
+
+function buildProgress() {
+  const wrap = document.getElementById('progress');
+  wrap.innerHTML = '';
+  for(let i=0;i<10;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < currentQ ? ' done' : i===currentQ ? ' active' : '');
+    wrap.appendChild(d);
+  }
+}
+
+function startQuiz() {
+  document.getElementById('s0').classList.remove('visible');
+  currentQ = 0;
+  answers = [];
+  showQuestion();
+}
+
+function showQuestion() {
+  const sq = document.getElementById('sq');
+  sq.classList.add('visible');
+  buildProgress();
+  const q = questions[currentQ];
+  document.getElementById('q-label').textContent = `question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-sub').textContent = q.sub;
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = '';
+  ['yes','no'].forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.textContent = val === 'yes' ? 'yes, that sounds like me' : 'no, not really';
+    btn.onclick = () => selectAnswer(val);
+    opts.appendChild(btn);
+  });
+}
+
+function selectAnswer(val) {
+  const q = questions[currentQ];
+  if(val === 'yes' && q.yes) {
+    answers.push(q.yes);
+  }
+  currentQ++;
+  if(currentQ < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if(currentQ > 0) {
+    currentQ--;
+    answers.pop();
+    showQuestion();
+  } else {
+    document.getElementById('sq').classList.remove('visible');
+    document.getElementById('s0').classList.add('visible');
+    buildProgress();
+  }
+}
+
+function getDiagnosis() {
+  const priority = ['paralysis','anchor','clutter','cart','light','surface','scale','layout','identity'];
+  for(const p of priority) {
+    if(answers.includes(p)) return p;
+  }
+  return 'anchor';
+}
+
+function showResult() {
+  document.getElementById('sq').classList.remove('visible');
+  const key = getDiagnosis();
+  diagnosisKey = key;
+  const d = diagnoses[key];
+  const p = plans[key];
+
+  document.getElementById('diag-title').textContent = d.title;
+  document.getElementById('diag-sub').textContent = d.sub;
+
+  const daysEl = document.getElementById('plan-days');
+  daysEl.innerHTML = '';
+  p.forEach(day => {
+    const card = document.createElement('div');
+    card.className = 'day-card';
+    card.innerHTML = `<div class="day-num">day ${day.day}</div><div class="day-task">${day.task}</div><div class="day-desc">${day.desc}</div>`;
+    daysEl.appendChild(card);
+  });
+
+  document.getElementById('sresult').classList.add('visible');
+  buildProgress();
+  document.getElementById('sresult').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function submitEmail() {
+  const email = document.getElementById('email-input').value;
+  if(!email || !email.includes('@')) {
+    document.getElementById('email-input').style.borderColor = 'var(--bordo)';
+    return;
+  }
+  // Kit form submission
+  const formData = new FormData();
+  formData.append('email_address', email);
+  formData.append('fields[diagnosis]', diagnosisKey || 'unknown');
+  fetch('https://app.kit.com/forms/YOUR_FORM_ID/subscriptions', {
+    method:'POST', body: formData,
+    headers:{'Accept':'application/json'}
+  }).catch(()=>{});
+  document.getElementById('email-ok').style.display = 'block';
+  document.getElementById('email-input').disabled = true;
+  document.querySelector('.email-row button').disabled = true;
+}
+
+buildProgress();
+</script>
+</body>
+</html>
