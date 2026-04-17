@@ -154,7 +154,7 @@
   <button class="btn-back" onclick="goBack()">← back</button>
 </div>
 
-<!-- SCREEN 2: RESULT -->
+<!-- SCREEN 2: RESULT — diagnosis + email gate -->
 <div class="screen" id="sresult">
   <p class="result-tag">your diagnosis</p>
   <div class="result-diagnosis">
@@ -163,21 +163,28 @@
     <p class="sub" id="diag-sub"></p>
   </div>
 
-  <p class="plan-title">your 7-day plan</p>
-  <div id="plan-days"></div>
-
-  <div class="email-wrap">
-    <p><strong>want this sent to your inbox?</strong> enter your email and we'll send you the full plan as a pdf — plus the next step when you're ready.</p>
+  <div class="email-wrap" id="email-gate">
+    <p><strong>your 7-day plan is ready.</strong></p>
+    <p>you don't have to do everything today. you just have to start here.<br>enter your email to get your personalized plan — free.</p>
     <div class="email-row">
       <input type="email" id="email-input" placeholder="your@email.com">
-      <button onclick="submitEmail()">send it</button>
+      <button onclick="submitEmailAndShow()">get my plan</button>
     </div>
     <p class="email-success" id="email-ok">you're in. check your inbox.</p>
   </div>
 
-  <div class="cta-box">
-    <p>want the complete method? rent it. own it. is a 7-day guide that walks you through every room — with real before/after photos from a real rental.</p>
-    <a href="https://softspace6.gumroad.com/l/rent-it-own-it" target="_blank">get the full course — $47</a>
+  <!-- PLAN — hidden until email submitted -->
+  <div id="plan-section" style="display:none">
+    <p style="font-size:13px;color:var(--grey);margin-bottom:20px;line-height:1.6">
+      your personal starting point. come back to it every time you don't know where to start.
+    </p>
+    <p class="plan-title">your 7-day plan</p>
+    <div id="plan-days"></div>
+
+    <div class="cta-box">
+      <p>you already have the instincts. rent it. own it. gives them a structure — room by room, in 7 days.</p>
+      <a href="https://softspace6.gumroad.com/l/rent-it-own-it" target="_blank">get the full course — $27</a>
+    </div>
   </div>
 </div>
 
@@ -466,13 +473,12 @@ function showResult() {
   document.getElementById('sresult').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function submitEmail() {
+function submitEmailAndShow() {
   const email = document.getElementById('email-input').value;
   if(!email || !email.includes('@')) {
     document.getElementById('email-input').style.borderColor = 'var(--bordo)';
     return;
   }
-  // Kit form submission
   const formData = new FormData();
   formData.append('email_address', email);
   formData.append('fields[diagnosis]', diagnosisKey || 'unknown');
@@ -482,7 +488,11 @@ function submitEmail() {
   }).catch(()=>{});
   document.getElementById('email-ok').style.display = 'block';
   document.getElementById('email-input').disabled = true;
-  document.querySelector('.email-row button').disabled = true;
+  document.querySelector('#email-gate button').disabled = true;
+  setTimeout(() => {
+    document.getElementById('plan-section').style.display = 'block';
+    document.getElementById('plan-section').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 800);
 }
 
 buildProgress();
